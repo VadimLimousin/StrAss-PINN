@@ -7,6 +7,7 @@ The reconstruction of deep ocean currents is a major challenge in data assimilat
 ## Dataset
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15074965.svg)](https://doi.org/10.5281/zenodo.15074965)
+‡
 Data files required to run these codes are available on Zenodo. The data requirements are:
   - To run the introductory notebook: params.in, vars.nc, coords_128_100j, mask_128_100j, psi1_128_100j, std_128_100j
   - To run the full method: params.in, vars.nc, coords, mask, psi1, std
