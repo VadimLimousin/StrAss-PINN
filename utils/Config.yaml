@@ -1,0 +1,87 @@
+base_config: &BASE
+  # Model parameters
+  hidden_layers: 2
+  nb_neurons: 125
+  wt: 1.5
+  kx: 10
+  timescale: 22 # days
+  LAM: [0, 5e-4, 1]
+  nb_epochs: 1000
+  nb_rounds: 3 # number of iterations of the block strategy
+  num_workers: 5
+
+  # Learning parameters
+  lr: 0.0001
+  noise_strength: 0
+  save_every: 100
+  log_every: 5
+  print_every: 50
+  val_every: 50
+  home: "/Long_learning_500"
+  use_wandb: True
+
+  img_size: 513
+  t_size: 100
+
+  batch_size_reg: 100_000
+  nb_reg: 1_300_000
+
+  nb_surface: 392_470
+  batch_size_surf: 30_190
+
+  mean: -0.1623
+  std: 6546.0830
+
+ARGO: &ARGO
+  <<: *BASE
+  nb_buoys: 800
+
+  nb_int: 80_000
+  batch_size_int: 8_000
+
+  nb_bot: 8_000
+  batch_size_bot: 800
+
+  name: "ARGO set-up"
+  
+LESS_ARGO: &LESS_ARGO
+  <<: *BASE
+  nb_buoys: 500
+
+  nb_int: 50_000
+  batch_size_int: 5_000
+
+  nb_bot: 5_000
+  batch_size_bot: 500
+
+  name: "Few ARGO set-up"
+
+STATIC_ARGO: &STATIC_ARGO
+  <<: *BASE
+  nb_buoys: 800
+
+  nb_int: 80_000
+  batch_size_int: 8_000
+
+  nb_bot: 8_000
+  batch_size_bot: 800
+
+  name: "Static ARGO set-up"
+
+SHORT: &SHORT
+  <<: *ARGO
+  nb_epochs: 100
+
+  home: "/Test"
+
+DEBUG: &DEBUG
+  <<: *ARGO
+  nb_epochs: 10
+  save_every: 5
+  log_every: 1
+  print_every: 1
+
+  batch_size_reg: 100_000
+  nb_reg: 1_300_000
+
+  home: "/Test"
