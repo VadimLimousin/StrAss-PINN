@@ -14,6 +14,5 @@ from .Dynamics import (
 )
 from .SineLayer import Siren
 from .utils import *
-from .dataloaders import get_dataloaders_surf, get_dataloaders_int, get_dataloaders_bot
-from .dl import get_dataloader_surf, get_dataloader_int, get_dataloader_bot, get_reg
+from .dl import get_dataloader_surf, get_dataloader_int, get_dataloader_bot
 from .YParams import YParams

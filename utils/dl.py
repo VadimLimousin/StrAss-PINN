@@ -105,16 +105,19 @@ class Regularizer(Dataset):
         else:
             return self.coords[idx]
 
-def get_dataloader_surf(params, noise=None):
+def get_dataloader_surf(params, noise=None, gd=None):
     read_data()
 
-    psi1, coords1, mask, std = get_data()
+    if gd is None:
+        psi1, coords1, mask, std = get_data()
+    else:
+        psi1, coords1, mask, std = gd()
 
     data_psi1 = SurfaceFitting(params, params.img_size, params.t_size, psi1, coords1, mask, noise=noise)
 
 
-    dataloader1 = DataLoader(data_psi1, batch_size=params.batch_size_surf, pin_memory=True,
-                             num_workers=params.num_workers, shuffle=True)  # observation points
+    dataloader1 = DataLoader(data_psi1, batch_size=params.batch_size_surf, pin_memory=torch.cuda.is_available(),
+                             num_workers=params.num_workers, shuffle=True, drop_last=True)  # observation points
 
     if params.round>1:
         return dataloader1
@@ -125,8 +128,8 @@ def get_dataloader_int(params, psi1, noise=None, idx=None):
     data_psi2 = StaticRandomMask(params, params.img_size, params.t_size, 1, params.nb_int, psi1,
                                  noise=noise, idx=idx, sample_every=params.timescale)
 
-    dataloader2 = DataLoader(data_psi2, batch_size=params.batch_size_int, pin_memory=True,
-                             num_workers=params.num_workers, shuffle=True)
+    dataloader2 = DataLoader(data_psi2, batch_size=params.batch_size_int, pin_memory=torch.cuda.is_available(),
+                             num_workers=params.num_workers, shuffle=True, drop_last=True)
 
     noise2 = data_psi2.noise
     idx2 = data_psi2.idx
@@ -141,8 +144,8 @@ def get_dataloader_bot(params, psi2, noise=None, idx=None):
     data_psi3 = StaticRandomMask(params, params.img_size, params.t_size, 2, params.nb_bot, psi2,
                                  noise=noise, idx=idx, sample_every=params.timescale)
 
-    dataloader3 = DataLoader(data_psi3, batch_size=params.batch_size_bot, pin_memory=True,
-                             num_workers=params.num_workers, shuffle=True)
+    dataloader3 = DataLoader(data_psi3, batch_size=params.batch_size_bot, pin_memory=torch.cuda.is_available(),
+                             num_workers=params.num_workers, shuffle=True, drop_last=True)
 
     noise3 = data_psi3.noise
     idx3 = data_psi3.idx
@@ -152,9 +155,3 @@ def get_dataloader_bot(params, psi2, noise=None, idx=None):
         return dataloader3
     else:
         return dataloader3, noise3, idx3
-
-def get_reg(params, level):
-    regdata_psi = Regularizer(params.nb_reg, level)
-    regdataloader = DataLoader(regdata_psi, batch_size=params.batch_size_reg, pin_memory=True,
-                                num_workers=params.num_workers, shuffle=True)  # collocation points
-    return regdataloader
